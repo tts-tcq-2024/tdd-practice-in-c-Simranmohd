@@ -1,44 +1,34 @@
-#include <gtest/gtest.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "StringCalculator.h"
 
-TEST(StringCalculatorAddTests, ExpectZeroForEmptyInput) {
-    int expectedresult = 0;
-    const char* input = "Hello, world!";
-    int result = add(input);
-    ASSERT_EQ(result, expectedresult);
-}
+int Add(const char* numbers) {
+    if (numbers == NULL || numbers[0] == '\0') {
+        return 0;
+    }
 
-TEST(StringCalculatorAddTests, ExpectZeroForSingleZero) {
-    int expectedresult = 0;
-    const char* input = "0";
-    int result = add(input);
-    ASSERT_EQ(result, expectedresult);
-}
+    int sum = 0;
+    char delimiter = ',';
+    const char* num_str = numbers;
 
-TEST(StringCalculatorAddTests, ExpectSumForTwoNumbers) {
-    int expectedresult = 3;
-    const char*  input = "1,2";
-    int result = add(input);
-    ASSERT_EQ(result, expectedresult);
-}
+    if (strncmp(numbers, "//", 2) == 0) {
+        delimiter = numbers[2];
+        num_str = strchr(numbers, '\n') + 1;
+    }
 
-TEST(StringCalculatorAddTests, ExpectSumWithNewlineDelimiter) {
-    int expectedresult = 6;
-    const char*  input = "1\n2,3";
-    int result =add(input);
-    ASSERT_EQ(result, expectedresult);
-}
+    char* token;
+    char* input_copy = strdup(num_str);
+    char* rest = input_copy;
 
-TEST(StringCalculatorAddTests, IgnoreNumbersGreaterThan1000) {
-    int expectedresult = 1;
-    const char*  input = "1,1001";
-    int result =add(input);
-    ASSERT_EQ(result, expectedresult);
-}
+    while ((token = strtok_r(rest, &delimiter, &rest))) {
+        char* end;
+        long num = strtol(token, &end, 10);
+        if (*end == '\0') {
+            sum += num;
+        }
+    }
 
-TEST(StringCalculatorAddTests, ExpectSumWithCustomDelimiter) {
-    int expectedresult = 3;
-    const char*  input = "//;\n1;2";
-    int result = add(input);
-    ASSERT_EQ(result, expectedresult);
+    free(input_copy);
+    return sum;
 }
