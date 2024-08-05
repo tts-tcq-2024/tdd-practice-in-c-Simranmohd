@@ -1,42 +1,44 @@
-#include <stdio.h>
-#include <assert.h>
+#include <gtest/gtest.h>
 #include "StringCalculator.h"
 
-void testEmptyString() {
-    assert(Add("") == 0);
+TEST(StringCalculatorAddTests, ExpectZeroForEmptyInput) {
+    int expectedresult = 0;
+    const char* input = "Hello, world!";
+    int result = add(input);
+    ASSERT_EQ(result, expectedresult);
 }
 
-void testOneNumber() {
-    assert(Add("1") == 1);
+TEST(StringCalculatorAddTests, ExpectZeroForSingleZero) {
+    int expectedresult = 0;
+    const char* input = "0";
+    int result = add(input);
+    ASSERT_EQ(result, expectedresult);
 }
 
-void testTwoNumbers() {
-    assert(Add("1,2") == 3);
+TEST(StringCalculatorAddTests, ExpectSumForTwoNumbers) {
+    int expectedresult = 3;
+    const char*  input = "1,2";
+    int result = add(input);
+    ASSERT_EQ(result, expectedresult);
 }
 
-void testMultipleNumbers() {
-    assert(Add("1,2,3,4,5") == 15);
+TEST(StringCalculatorAddTests, ExpectSumWithNewlineDelimiter) {
+    int expectedresult = 6;
+    const char*  input = "1\n2,3";
+    int result =add(input);
+    ASSERT_EQ(result, expectedresult);
 }
 
-void testNewlineAsDelimiter() {
-    assert(Add("1\n2,3") == 6);
+TEST(StringCalculatorAddTests, IgnoreNumbersGreaterThan1000) {
+    int expectedresult = 1;
+    const char*  input = "1,1001";
+    int result =add(input);
+    ASSERT_EQ(result, expectedresult);
 }
 
-void testCustomDelimiter() {
-    assert(Add("//;\n1;2") == 3);
-}
-
-void runTests() {
-    testEmptyString();
-    testOneNumber();
-    testTwoNumbers();
-    testMultipleNumbers();
-    testNewlineAsDelimiter();
-    testCustomDelimiter();
-    printf("All tests passed!\n");
-}
-
-int main() {
-    runTests();
-    return 0;
+TEST(StringCalculatorAddTests, ExpectSumWithCustomDelimiter) {
+    int expectedresult = 3;
+    const char*  input = "//;\n1;2";
+    int result = add(input);
+    ASSERT_EQ(result, expectedresult);
 }
