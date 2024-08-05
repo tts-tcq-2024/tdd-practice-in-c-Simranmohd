@@ -1,5 +1,5 @@
-#ifndef STRING_CALCULATOR_H
-#define STRING_CALCULATOR_H
+#ifndef StringCalculator.h
+#define StringCalculator.h
 
 int Add(const char* numbers);
 
