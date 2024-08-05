@@ -1,34 +1,42 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <assert.h>
 #include "StringCalculator.h"
 
-int Add(const char* numbers) {
-    if (numbers == NULL || numbers[0] == '\0') {
-        return 0;
-    }
+void testEmptyString() {
+    assert(Add("") == 0);
+}
 
-    int sum = 0;
-    char delimiter = ',';
-    const char* num_str = numbers;
+void testOneNumber() {
+    assert(Add("1") == 1);
+}
 
-    if (strncmp(numbers, "//", 2) == 0) {
-        delimiter = numbers[2];
-        num_str = strchr(numbers, '\n') + 1;
-    }
+void testTwoNumbers() {
+    assert(Add("1,2") == 3);
+}
 
-    char* token;
-    char* input_copy = strdup(num_str);
-    char* rest = input_copy;
+void testMultipleNumbers() {
+    assert(Add("1,2,3,4,5") == 15);
+}
 
-    while ((token = strtok_r(rest, &delimiter, &rest))) {
-        char* end;
-        long num = strtol(token, &end, 10);
-        if (*end == '\0') {
-            sum += num;
-        }
-    }
+void testNewlineAsDelimiter() {
+    assert(Add("1\n2,3") == 6);
+}
 
-    free(input_copy);
-    return sum;
+void testCustomDelimiter() {
+    assert(Add("//;\n1;2") == 3);
+}
+
+void runTests() {
+    testEmptyString();
+    testOneNumber();
+    testTwoNumbers();
+    testMultipleNumbers();
+    testNewlineAsDelimiter();
+    testCustomDelimiter();
+    printf("All tests passed!\n");
+}
+
+int main() {
+    runTests();
+    return 0;
 }
